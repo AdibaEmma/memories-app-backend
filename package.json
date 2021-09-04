@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "An express app for backend api of memories-project",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "start": "nodemon index.js"
   },
