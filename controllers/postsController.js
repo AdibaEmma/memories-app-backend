@@ -25,6 +25,19 @@ export const fetchPosts = async (req, res, next) => {
     }
 }
 
+export const getPost = async (req, res, next) => {
+    try {
+        const { id: _id } = req.params 
+
+        const postMessage = await PostMessage.findById(_id)
+
+        res.status(200).json(postMessage)
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ error: error.message })
+    }
+}
+
 export const updatePost = async (req, res, next) => {
 
     try {
