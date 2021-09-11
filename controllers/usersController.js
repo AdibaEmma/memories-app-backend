@@ -1,10 +1,9 @@
 import bcrypt from 'bcryptjs'
-import { json } from 'body-parser'
 import jwt from 'jsonwebtoken'
 
-import User from '../models/user'
+import User from '../models/user.js'
 
-export const signIn = async (req, res, next) => {
+export const signin = async (req, res, next) => {
     const { email, password } = req.body
 
     try {
@@ -18,8 +17,32 @@ export const signIn = async (req, res, next) => {
 
         const token = json.sign({ email: existingUser.email, id: existingUser._id}, process.env.JWT_SECRET, { expiresIn: '1h'})
 
+        res.status(200).json({result: existingUser, token})
+
     } catch (error) {
         console.log(error);
-        res.status(500).json({ error: error.message})
+        res.status(500).json({ error: 'Something went wrong'})
     }
-} 
+}
+
+export const signup = async (req, res, next) => {
+    const { email, password, firstName, lastName, confirmPassword } = req.body
+
+    try {
+        const existingUser = await User.findOne({email});
+
+        if(existingUser) return res.status(404).json({ message: "User already exist."})
+
+        if(password !== confirmPassword) return res.status(400).json({ message: "Passwords don't match"})
+
+        const hashedPassword = bcrypt.hash(password, 12)
+
+        const result = await User.create({ email, password: hashedPassword, name: `${firstName} ${lastName}`})
+
+        const token = json.sign({ email: result.email, id: result._id}, process.env.JWT_SECRET, { expiresIn: '1h'})
+
+        return res.status(201).json({result: result, token})
+    } catch (error) {
+        
+    }
+}
