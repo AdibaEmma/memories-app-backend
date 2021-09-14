@@ -23,7 +23,7 @@ app.use(express.json({ limit: "30mb", extented: true }))
 app.use(express.urlencoded({ limit: "30mb", extended: true}))
 
 app.use('/posts', postRoutes)
-app.use('/user', userRoutes)
+app.use('/users', userRoutes)
 
 app.get('/', (req, res, next) => {
     res.send('Hello to Memories API  ')
