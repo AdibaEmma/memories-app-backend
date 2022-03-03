@@ -4,7 +4,7 @@ import PostMessage from "../models/postMessage.js"
 export const createPosts = async (req, res, next) => {
     const post = req.body
 
-    const newPost = new PostMessage({...post, creator: req.userId, createdAt: new Date().toISOString})
+    const newPost = new PostMessage({...post, creator: req.creator, createdAt: new Date().toISOString})
 
     try {
         await newPost.save()
