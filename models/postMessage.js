@@ -11,10 +11,8 @@ const postSchema = mongoose.Schema({
         type: [String],
         default: []
     },
-    createdAt: {
-        type: Date,
-        default: new Date()
-    }
+},{
+    timestamps: true
 })
 
 const PostMessage = mongoose.model('PostMessage', postSchema)
