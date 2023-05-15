@@ -6,7 +6,7 @@ import dotenv from 'dotenv'
 const app= express()
 app.use(cors({
     'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'Authorization',
+    'Access-Control-Allow-Headers': '*',
     origin: '*',
     methods: ['GET','POST','DELETE','UPDATE','PUT','PATCH'],
     allowedHeaders: [
