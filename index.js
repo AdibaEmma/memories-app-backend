@@ -5,13 +5,14 @@ import dotenv from 'dotenv'
 
 const app= express()
 app.use(cors({
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': '*',
+    'Access-Control-Allow-Origin': 'https://memsmile.netlify.app',
+    'Access-Control-Allow-Headers': 'Authorization',
     origin: '*',
     methods: ['GET','POST','DELETE','UPDATE','PUT','PATCH'],
     allowedHeaders: [
         'Content-Type',
-        'Authorization'
+        'Authorization',
+        'XMLHttpRequest',
     ]
 }))
 dotenv.config()
