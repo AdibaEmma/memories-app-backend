@@ -20,7 +20,7 @@ export const fetchPosts = async (req, res, next) => {
         
         res.status(200).json(postMessages)
     } catch (err) {
-        res.status(404).json({ message: err.message })
+        res.status(500).json({ error: "Failed to fetch posts" })
     }
 }
 
@@ -38,20 +38,29 @@ export const getPost = async (req, res, next) => {
 }
 
 export const updatePost = async (req, res, next) => {
+  const { id } = req.params;
+  const post = req.body;
 
-    try {
-        const { id } = req.params
-        const post = req.body
-        if(!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send('No post with that id')
-
-        const updatedPost = await PostMessage.findByIdAndUpdate(id, post, { new: true })
-
-        res.status(200).json(updatedPost)
-    } catch (err) {
-        console.log(err);
-
-        res.status(500).json({ error: err.message})
+  try {
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(404).json({ message: "Invalid post ID" });
     }
+
+    const updatedPost = await PostMessage.findByIdAndUpdate(id, post, {
+      new: true,
+    });
+
+    if (!updatedPost) {
+      return res.status(404).json({ message: "No post found with that ID" });
+    }
+
+    res.status(200).json(updatedPost);
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ message: "Error updating post", error: error.message });
+  }
 }
 
 export const deletePost = async (req, res, next) => {
