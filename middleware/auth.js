@@ -1,27 +1,32 @@
-import jwt from 'jsonwebtoken'
+import jwt from "jsonwebtoken";
 
-const auth = async(req, res, next) => {
-    try {
-        console.log(req.headers);
-        const  token = req.headers.authorization.split(" ")[1];
-        const isCustomAuth = token.length < 500
+const auth = async (req, res, next) => {
+  try {
+    console.log(req.headers.authorization);
 
-        let decodedData;
+    const token = req.headers.authorization?.split(" ")[1];
 
-        if(token && isCustomAuth) {
-            decodedData = jwt.verify(token, process.env.JWT_SECRET);
-
-            req.userId = decodedData?.id
-        } else {
-            decodedData = jwt.decode(token);
-
-            req.userId = decodedData?.sub
-        }
-
-        next()
-    } catch (error) {
-        console.log(error);
+    if (!token) {
+      return res.status(401).json({ message: "No token provided" });
     }
-}
 
-export default auth
+    const isCustomAuth = token.length < 500;
+
+    let decodedData;
+
+    if (isCustomAuth) {
+      decodedData = jwt.verify(token, process.env.JWT_SECRET);
+      req.userId = decodedData?.id;
+    } else {
+      decodedData = jwt.decode(token);
+      req.userId = decodedData?.sub;
+    }
+
+    next();
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Something went wrong" });
+  }
+};
+
+export default auth;
